@@ -57,7 +57,7 @@ def touchGreenLine(pds,df,ticker):
     if "tracking" not in  message: 
         print(notifications.sendMessage(message=message))
     else:
-        print(message)
+        print(notifications.sendMessage(message=message))
         
 while True:
     print("Time: %s" % time.ctime())
