@@ -1,7 +1,8 @@
 import pandas as pd
 from  binance.client import Client
+import api
 
-client = Client(api_key=Pkey, api_secret=Skey)
+client = Client(api_key=api.Pkey, api_secret=api.Skey)
 columns = ['Date','Open','High','Low','Close' ,'Volume','IGNORE','Quote_Volume','Trades_Count','BUY_VOL','BUY_VOL_VAL','x']
 
 
