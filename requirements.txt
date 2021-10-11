@@ -26,4 +26,4 @@ ujson==4.2.0
 urllib3==1.26.7
 websockets==9.1
 yarl==1.6.3
-streamlit==2.26.0
+streamlit==1.0.0
