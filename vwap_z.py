@@ -6,7 +6,7 @@ import notifications
 import vp_strtg
 
 
-tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","OMGUSDT","FETUSDT","CELRUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","MBOXUSDT","LINKUSDT","AVAUSDT"]
+tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","OMGUSDT","FETUSDT","CELRUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","MBOXUSDT","LINKUSDT","AVAUSDT","KAVAUSDT"]
 ticker = "FILUSDT"
 
 print(notifications.sendMessage("Start Application 🎉🎉🎉🎉"))
@@ -66,9 +66,10 @@ def touchGreenLine(pds,df,ticker):
         message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
     elif score > 2.5 and not isTimeToBuy:
          message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
+         addTickerToBuyList(ticker) 
     elif score > 4:
         message =f"Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
-    elif score >-2.5 and score < 2.5 and isTimeToBuy:
+    elif score >-2.5 and score < 2.5:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
         removeTicker(ticker)
     else:
