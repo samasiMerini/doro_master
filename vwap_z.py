@@ -6,7 +6,7 @@ import notifications
 import vp_strtg
 
 
-tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","OMGUSDT","FETUSDT","CELRUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","MBOXUSDT","LINKUSDT"]
+tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","OMGUSDT","FETUSDT","CELRUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","MBOXUSDT","LINKUSDT","AVAUSDT"]
 ticker = "FILUSDT"
 
 
@@ -44,13 +44,13 @@ def touchGreenLine(pds,df,ticker):
     close = df["Close"][-1]
     pocValue = vp_strtg.getPoc(ticker=ticker)
     if score <= -2.5 and close< pocValue :
-        message = f"Is time to Buy {ticker}, {round(score,2)} Buy at {close} and Sell when the price achive: {pocValue}"
+        message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
     elif score < -4 and close < pocValue:
-        message= f"Buy {ticker} again {round(score,2)}...!"
+        message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
     elif score > 2.5:
-         message =f"Is time to Sell {ticker}  {round(score,2)}"
+         message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
     elif score > 4:
-        message =f"If you have more {ticker} sell it now {round(score,2)}"
+        message =f"Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
     else:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
 
