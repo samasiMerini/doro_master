@@ -35,24 +35,45 @@ def startTrackingCrypto():
             touchGreenLine(pds,df,ticker=ticker)
 
 
+tickerToBuy = []
 
+def isTickerBuySend(tickerToAdd):
+    for ticker in tickerToBuy:
+        if ticker == tickerToAdd:
+            return True
+        else:
+            return False
+
+def addTickerToBuyList(tickerToAdd):
+    tickerToBuy.append(tickerToAdd)
+
+def removeTicker(ticker):
+    for tk in tickerToBuy:
+        if tk == ticker:
+            tickerToBuy.remove(tk)
 
 def touchGreenLine(pds,df,ticker):
     result = calculate_Zscore(pds,df)
     score = float(result.tail(1).values)
     message = ""
     close = df["Close"][-1]
+    isTimeToBuy = isTickerBuySend(ticker)
     pocValue = vp_strtg.getPoc(ticker=ticker)
-    if score <= -2.5 and close< pocValue :
+    if score <= -2.5 and close< pocValue and not isTimeToBuy:
         message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
+        addTickerToBuyList(ticker) 
     elif score < -4 and close < pocValue:
         message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
-    elif score > 2.5:
+    elif score > 2.5 and not isTimeToBuy:
          message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
     elif score > 4:
         message =f"Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
+    elif score >-2.5 and score < 2.5 and isTimeToBuy:
+        message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
+        removeTicker(ticker)
     else:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
+
 
     if "tracking" not in  message: 
         print(notifications.sendMessage(message=message))
