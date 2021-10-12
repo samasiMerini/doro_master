@@ -9,7 +9,7 @@ import vp_strtg
 tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","OMGUSDT","FETUSDT","CELRUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","MBOXUSDT","LINKUSDT","AVAUSDT"]
 ticker = "FILUSDT"
 
-
+print(notifications.sendMessage("Start Application 🎉🎉🎉🎉"))
 pdsTOCalculated = [48,199,484]
 #pds = 48
 def calculate_SMA(ser, pds):
