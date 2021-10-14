@@ -59,10 +59,10 @@ def touchGreenLine(pds,df,ticker):
     close = df["Close"][-1]
     isTimeToBuy = isTickerBuySend(ticker)
     pocValue = vp_strtg.getPoc(ticker=ticker)
-    if score <= -2.5 and close< pocValue and not isTimeToBuy:
+    if score <= -2.5  and not isTimeToBuy:
         message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
         addTickerToBuyList(ticker) 
-    elif score < -4 and close < pocValue:
+    elif score < -4 :
         message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
     elif score > 2.5 and not isTimeToBuy:
          message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
