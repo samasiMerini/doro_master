@@ -6,8 +6,7 @@ import notifications
 import vp_strtg
 
 
-tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","OMGUSDT","CKBUSDT","FETUSDT","CHRUSDT","MANAUSDT","CELRUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","MBOXUSDT","LINKUSDT","AVAUSDT","KAVAUSDT"]
-ticker = "FILUSDT"
+tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","FLOWUSDT","OMGUSDT","KEEPUSDT","REEFUSDT","FTMUSDT","DOTUSDT","CKBUSDT","MATICUSDT","STXUSDT","FETUSDT","CHRUSDT","ARUSDT","NUUSDT","MANAUSDT","XTZUSDT","CELRUSDT","IRISUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","XLMUSDT","MBOXUSDT","LINKUSDT","AVAUSDT","KAVAUSDT"]
 
 print(notifications.sendMessage("Start Application 🎉🎉🎉🎉"))
 pdsTOCalculated = [48,199,484]
@@ -35,17 +34,27 @@ def startTrackingCrypto():
             touchGreenLine(pds,df,ticker=ticker)
 
 
-tickerToBuy = []
+tickerToSell = []
 
-def isTickerBuySend(tickerToAdd):
-    for ticker in tickerToBuy:
-        if ticker == tickerToAdd:
-            return True
-        else:
-            return False
-
+def isTickerBuyOrSellSend(tickerToAdd,type):
+    if type == "BUY":
+        for ticker in tickerToBuy:
+            if ticker == tickerToAdd:
+                return True
+            else:
+                return False
+    else:
+        for ticker in tickerToSell:
+            if ticker == tickerToAdd:
+                return True
+            else:
+                return False
+    return False
 def addTickerToBuyList(tickerToAdd):
     tickerToBuy.append(tickerToAdd)
+
+def addTickerToSellList(tickerToAdd):
+    tickerToSell.append(tickerToAdd)
 
 def removeTicker(ticker):
     for tk in tickerToBuy:
@@ -57,24 +66,26 @@ def touchGreenLine(pds,df,ticker):
     score = float(result.tail(1).values)
     message = ""
     close = df["Close"][-1]
-    isTimeToBuy = isTickerBuySend(ticker)
+    isTimeToBuy = isTickerBuyOrSellSend(ticker,"BUY")
+    isTimeToSell = isTickerBuyOrSellSend(ticker,"SELL")
+
     pocValue = vp_strtg.getPoc(ticker=ticker)
-    if score <= -2.5  and not isTimeToBuy:
+    if score <= -2.5 and score > -4 and not isTimeToBuy:
         message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
         addTickerToBuyList(ticker) 
-    elif score < -4 :
+    elif score <= -4 :
         message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
-    elif score > 2.5 and not isTimeToBuy:
+    elif score > 2.5 and score < 4 and not isTimeToSell:
          message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
-         addTickerToBuyList(ticker) 
-    elif score > 4:
+         addTickerToSellList(ticker) 
+    elif score >= 4:
         message =f"Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
-    elif score >-2.5 and score < 2.5:
-        message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
-        removeTicker(ticker)
     else:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
 
+    if (score >-2.5 or score < 2.5) and (isTimeToBuy or isTimeToSell) :
+        print("remove ticker")
+        removeTicker(ticker)
 
     if "tracking" not in  message: 
         print(notifications.sendMessage(message=message))
@@ -82,9 +93,14 @@ def touchGreenLine(pds,df,ticker):
         print(message)
         
 while True:
-    print("Time: %s" % time.ctime())
+    message =("Time: %s" % time.ctime())
+    print(notifications.sendMessage(message=message))
     startTrackingCrypto()
+    
+    message2 = ("END Time: %s" % time.ctime())
+    print(notifications.sendMessage(message=message2))
     time.sleep(10)
+
 
 # print("vwapScore : "),
 # df  =  pd.DataFrame(result)
