@@ -65,16 +65,15 @@ def touchGreenLine(pds,df,ticker):
     score = float(result.tail(1).values)
     message = ""
     close = df["Close"][-1]
-    isTimeToBuy = isTickerBuyOrSellSend(ticker,"BUY")
-    isTimeToSell = isTickerBuyOrSellSend(ticker,"SELL")
+    
 
     pocValue = vp_strtg.getPoc(ticker=ticker)
-    if score <= -2.5 and score > -4 and not isTimeToBuy:
+    if score <= -2.5 and score > -4 and not(ticker in tickerToBuy):
         message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
         addTickerToBuyList(ticker) 
     elif score <= -4 :
         message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
-    elif score > 2.5 and score < 4 and not isTimeToSell:
+    elif score > 2.5 and score < 4 and not(ticker in tickerToSell):
          message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
          addTickerToSellList(ticker) 
     elif score >= 4:
@@ -82,7 +81,7 @@ def touchGreenLine(pds,df,ticker):
     else:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
 
-    if (score >-2.5 or score < 2.5) and (isTimeToBuy or isTimeToSell) :
+    if (score >-2.5 or score < 2.5) and ((ticker in tickerToBuy) or (ticker in tickerToSell)) :
         print("remove ticker")
         removeTicker(ticker)
 
