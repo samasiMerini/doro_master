@@ -33,62 +33,68 @@ def startTrackingCrypto():
             df = gd.get_klines(ticker, Client.KLINE_INTERVAL_5MINUTE, "84 hours ago UTC")
             touchGreenLine(pds,df,ticker=ticker)
 
-tickerToBuy = []
+tickerToBuy = {}
+tickerToSell = {}
 
-tickerToSell = []
-
-def isTickerBuyOrSellSend(tickerToAdd,type):
+def isTickerBuyOrSellSend(tickerToAdd,type,pds):
     if type == "BUY":
         for ticker in tickerToBuy:
-            if ticker == tickerToAdd:
+            if ticker == tickerToAdd and pds  == tickerToBuy[ticker]:
                 return True
 
     else:
         for ticker in tickerToSell:
             if ticker == tickerToAdd:
                 return True
-
     return False
-def addTickerToBuyList(tickerToAdd):
-    tickerToBuy.append(tickerToAdd)
+def addTickerToBuyList(tickerToAdd,pds):
+    tickerToBuy[tickerToAdd] = pds
 
-def addTickerToSellList(tickerToAdd):
-    tickerToSell.append(tickerToAdd)
+def addTickerToSellList(tickerToAdd,pds):
+    tickerToSell[tickerToAdd] = pds
 
-def removeTicker(ticker):
-    for tk in tickerToBuy:
-        if tk == ticker:
-            tickerToBuy.remove(tk)
+def removeTicker(ticker,type,pds):
+    if type == "BUY":
+        for tk in list(tickerToBuy):
+            if tk == ticker and pds == tickerToBuy[tk]:
+                print("remove ticker")
+                del tickerToBuy[tk]
+    else:
+        for tks in list(tickerToSell):
+            if tks == ticker and pds == tickerToSell[tks]:
+                print("remove ticker")
+                del tickerToSell[tks]
 
 def touchGreenLine(pds,df,ticker):
     result = calculate_Zscore(pds,df)
     score = float(result.tail(1).values)
     message = ""
     close = df["Close"][-1]
-    
+    isTimeToBuy = isTickerBuyOrSellSend(ticker,"BUY",pds)
+    isTimeToSell = isTickerBuyOrSellSend(ticker,"SELL",pds)
 
     pocValue = vp_strtg.getPoc(ticker=ticker)
-    if score <= -2.5 and score > -4 and not(ticker in tickerToBuy):
+    if score <= -2.5 and score > -4 and not isTimeToBuy:
         message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
-        addTickerToBuyList(ticker) 
+        addTickerToBuyList(ticker,pds) 
     elif score <= -4 :
         message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
-    elif score > 2.5 and score < 4 and not(ticker in tickerToSell):
+    elif score > 2.5 and score < 4 and not isTimeToSell:
          message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
-         addTickerToSellList(ticker) 
+         addTickerToSellList(ticker,pds) 
     elif score >= 4:
         message =f"Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
     else:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
 
-    if (score >-2.5 or score < 2.5) and ((ticker in tickerToBuy) or (ticker in tickerToSell)) :
-        print("remove ticker")
-        removeTicker(ticker)
+    if  isTimeToBuy or isTimeToSell:
+        if (score >-2.5 and score < 2.5):
+            removeTicker(ticker,"BUY" if isTimeToBuy else "SELL",pds)
 
     if "tracking" not in  message: 
         print(notifications.sendMessage(message=message))
-    else:
-        print(message)
+    # else:
+        # print(message)
         
 while True:
     message =("Time: %s" % time.ctime())
