@@ -95,11 +95,8 @@ def touchGreenLine(pds,df,ticker):
         
 while True:
     message =("Time: %s" % time.ctime())
-    print(notifications.sendMessage(message=message))
+    print(message)
     startTrackingCrypto()
-    
-    message2 = ("END Time: %s" % time.ctime())
-    print(notifications.sendMessage(message=message2))
     time.sleep(10)
 
 
