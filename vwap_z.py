@@ -42,14 +42,12 @@ def isTickerBuyOrSellSend(tickerToAdd,type):
         for ticker in tickerToBuy:
             if ticker == tickerToAdd:
                 return True
-            else:
-                return False
+
     else:
         for ticker in tickerToSell:
             if ticker == tickerToAdd:
                 return True
-            else:
-                return False
+
     return False
 def addTickerToBuyList(tickerToAdd):
     tickerToBuy.append(tickerToAdd)
