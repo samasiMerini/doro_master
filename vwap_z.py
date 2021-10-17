@@ -33,6 +33,7 @@ def startTrackingCrypto():
             df = gd.get_klines(ticker, Client.KLINE_INTERVAL_5MINUTE, "84 hours ago UTC")
             touchGreenLine(pds,df,ticker=ticker)
 
+tickerToBuy = []
 
 tickerToSell = []
 
