@@ -2,7 +2,7 @@ from ticker_rules import rules
 from binance.client import Client
 import api
 
-client = api.Client
+client = api.client
 #set price format
 def format_price(ticker, price):
 	float_format = "%."+str(rules[ticker][0])+"f"
