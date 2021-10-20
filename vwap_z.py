@@ -4,15 +4,17 @@ import time
 import get_data as gd
 import notifications
 import vp_strtg
+import order  as ordr
 
 
-tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","FLOWUSDT","OMGUSDT","KEEPUSDT","REEFUSDT","FTMUSDT","DOTUSDT","CKBUSDT","MATICUSDT","STXUSDT","FETUSDT","CHRUSDT","ARUSDT","NUUSDT","MANAUSDT","XTZUSDT","CELRUSDT","IRISUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","XLMUSDT","MBOXUSDT","LINKUSDT","AVAUSDT","KAVAUSDT"]
+# tickers = ["FILUSDT","SOLUSDT","ONEUSDT","TFUELUSDT","ATOMUSDT","FLOWUSDT","BNBUSDT","OMGUSDT","KEEPUSDT","REEFUSDT","FTMUSDT","DOTUSDT","CKBUSDT","MATICUSDT","STXUSDT","FETUSDT","CHRUSDT","ARUSDT","NUUSDT","MANAUSDT","XTZUSDT","CELRUSDT","IRISUSDT","ERNUSDT","ETCUSDT","PERLUSDT","ADAUSDT","EPSUSDT","XRPUSDT","SLPUSDT","XLMUSDT","MBOXUSDT","LINKUSDT","AVAUSDT","KAVAUSDT"]
 
-print(notifications.sendMessage("Start Application 🎉🎉🎉🎉"))
+tickers = ["SOLUSDT","DOTUSDT","ETCUSDT","XRPUSDT","SLPUSDT","BNBUSDT","ICPUSDT","BTCUSDT","FILUSDT"]
+
+print(notifications.sendMessage("Start Application 2 🎉🎉🎉🎉"))
 pdsTOCalculated = [48,199,484]
 #pds = 48
 def calculate_SMA(ser, pds):
-
     sma = ser.rolling(window=pds).mean()
     return sma
 
@@ -25,7 +27,10 @@ def calculate_Zscore(pds,df):
     return (df['Close'] - df['mean']) / df['vwapsd']
 
 
-
+def increasePrice(price,pBuy):
+    # % increase = Increase ÷ Original Number × 100.
+    increase = ((pBuy - price)/price)*100
+    print(increase)
 
 def startTrackingCrypto():
     for pds in pdsTOCalculated:
@@ -72,18 +77,22 @@ def touchGreenLine(pds,df,ticker):
     close = df["Close"][-1]
     isTimeToBuy = isTickerBuyOrSellSend(ticker,"BUY",pds)
     isTimeToSell = isTickerBuyOrSellSend(ticker,"SELL",pds)
-
     pocValue = vp_strtg.getPoc(ticker=ticker)
+    increase = increasePrice(float(close),float(pocValue))
+    
     if score <= -2.5 and score > -4 and not isTimeToBuy:
-        message = f"Chri {ticker}, {round(score,2)} bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
+        message = f"🟢🟢🟢🔔🔔🔔 Chri {ticker}, {round(score,2)} /n  bhad taman  {close} o bi3o  mli iwsal: {pocValue}"
+        if score < pocValue and increase > 2.5:
+            message  =   message+ "/n" + ordr.startOrder(ticker=ticker)
+
         addTickerToBuyList(ticker,pds) 
     elif score <= -4 :
-        message= f"Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
+        message= f"🟢🟢🟢🔔🔔🔔 Chri 3ad {ticker} ila kayn 💰💰 {round(score,2)}...!"
     elif score > 2.5 and score < 4 and not isTimeToSell:
-         message =f"ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
+         message =f"🔴🔴🔴🔔🔔🔔  ila 3adndk  {ticker}  {round(score,2)}, bi3o rah wsal: {close} 💰💰💰 "
          addTickerToSellList(ticker,pds) 
     elif score >= 4:
-        message =f"Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
+        message =f"🔴🔴🔴🔔🔔🔔  Ila ba9i 3andk  {ticker} bi3o daba {round(score,2)}, {close}"
     else:
         message = f"tracking {ticker} pds {pds}, realtime price is: {close} and point of control is: {pocValue} ======> {round(score,2)}"
 
